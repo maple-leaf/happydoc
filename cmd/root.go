@@ -19,13 +19,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/maple-leaf/happydoc/models"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var setting = models.DocSetting{}
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands

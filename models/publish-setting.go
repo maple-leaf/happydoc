@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-type DocSetting struct {
+type PublishSetting struct {
 	Server  string
 	Version string
 	Path    string
@@ -13,7 +13,7 @@ type DocSetting struct {
 	DocType string
 }
 
-func (setting DocSetting) ToURL() (string, error) {
+func (setting PublishSetting) ToURL() (string, error) {
 	_url, err := url.Parse(setting.Server)
 	if setting.Server == "" || err != nil {
 		return "", errors.New("server is invalid")
