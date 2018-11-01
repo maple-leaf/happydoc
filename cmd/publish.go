@@ -19,11 +19,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/maple-leaf/happydoc/models"
 	"github.com/spf13/cobra"
 )
 
-var setting = models.DocSetting{}
 var publishCmd = &cobra.Command{
 	Use:   "publish",
 	Short: "publish your document",
