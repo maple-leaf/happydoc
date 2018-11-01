@@ -18,42 +18,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 
+	"github.com/maple-leaf/happydoc/models"
 	"github.com/spf13/cobra"
 )
 
-type docSetting struct {
-	server  string
-	version string
-	path    string
-	project string
-	docType string
-}
-
-func (setting docSetting) toURL() (string, error) {
-	_url, err := url.Parse(setting.server)
-	if setting.server == "" || err != nil {
-		return "", errors.New("server is invalid")
-	}
-
-	query := _url.Query()
-	if setting.version == "" {
-		return "", errors.New("version is invalid")
-	}
-	if setting.project == "" {
-		return "", errors.New("project is invalid")
-	}
-
-	query.Add("project", setting.project)
-	query.Add("version", setting.version)
-	query.Add("type", setting.docType)
-	_url.RawQuery = query.Encode()
-
-	return _url.String(), nil
-}
-
-var setting = docSetting{}
+var setting = models.DocSetting{}
 var publishCmd = &cobra.Command{
 	Use:   "publish",
 	Short: "publish your document",
@@ -62,25 +32,25 @@ var publishCmd = &cobra.Command{
 		if len(args) == 0 {
 			return errors.New("path to document folder not provided")
 		}
-		setting.path = args[0]
+		setting.Path = args[0]
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		version := cmd.Flag("version")
 		if version != nil {
-			setting.version = version.Value.String()
+			setting.Version = version.Value.String()
 		}
 		project := cmd.Flag("project")
 		if project != nil {
-			setting.project = project.Value.String()
+			setting.Project = project.Value.String()
 		}
 		server := cmd.Flag("server")
 		if server != nil {
-			setting.server = server.Value.String()
+			setting.Server = server.Value.String()
 		}
-		setting.docType = cmd.Flag("type").Value.String()
+		setting.DocType = cmd.Flag("type").Value.String()
 
-		_url, err := setting.toURL()
+		_url, err := setting.ToURL()
 		if err != nil {
 			return err
 		}
