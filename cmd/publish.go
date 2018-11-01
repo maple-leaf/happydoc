@@ -37,17 +37,20 @@ var publishCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		setting.Server = docConfig.Server
+		setting.Project = docConfig.Project
+
 		version := cmd.Flag("version")
 		if version != nil {
 			setting.Version = version.Value.String()
 		}
-		project := cmd.Flag("project")
-		if project != nil {
-			setting.Project = project.Value.String()
+		project := cmd.Flag("project").Value.String()
+		if project != "" {
+			setting.Project = project
 		}
-		server := cmd.Flag("server")
-		if server != nil {
-			setting.Server = server.Value.String()
+		server := cmd.Flag("server").Value.String()
+		if server != "" {
+			setting.Server = server
 		}
 		setting.DocType = cmd.Flag("type").Value.String()
 
@@ -57,7 +60,6 @@ var publishCmd = &cobra.Command{
 		}
 		http.Get(_url)
 		fmt.Printf("%v", _url)
-		fmt.Printf("%v", setting)
 		return nil
 	},
 }

@@ -32,7 +32,6 @@ var initCmd = &cobra.Command{
 	Short: "generate setting of happydoc",
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
 		project, _ := getConfigFromPackageJSONFile()
-		docConfig := models.DocConfig{}
 		data := []byte{}
 
 		for {
