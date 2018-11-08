@@ -56,6 +56,8 @@ func init() {
 
 	rootCmd.AddCommand(initCmd)
 
+	rootCmd.AddCommand(serverCmd)
+
 	rootCmd.AddCommand(publishCmd)
 	initPublishCmd()
 }
