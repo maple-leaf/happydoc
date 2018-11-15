@@ -52,6 +52,10 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 	apiRoutes.Use(middlewares.JWT(db))
 	{
 		apiRoutes.POST("/publish", func(c *gin.Context) {
+			status := c.Writer.Status()
+			if status == 403 {
+				return
+			}
 			project := c.PostForm("project")
 			docType := c.PostForm("type")
 			version := c.PostForm("version")
@@ -62,6 +66,7 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 
 			if err != nil {
 				c.Status(500)
+				return
 			}
 
 			doc := models.Document{
@@ -72,6 +77,7 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 
 			if (createDocument(doc, zipFilePath, db) != nil) {
 				c.Status(500)
+				return
 			}
 
 			c.Status(200)
