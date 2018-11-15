@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"compress/flate"
 	"github.com/mholt/archiver"
