@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/manifoldco/promptui"
 	"github.com/maple-leaf/happydoc/helpers"
@@ -43,6 +44,7 @@ var serverCmd = &cobra.Command{
 		port := uint64(9876)
 		questions := getServerQuestions(port)
 		answers := []string{}
+		var docServerConfig models.DocServerConfig
 
 		for {
 			answers, err = questions.Ask()
@@ -54,8 +56,9 @@ var serverCmd = &cobra.Command{
 			if err != nil {
 				break
 			}
-			docServerConfig := models.DocServerConfig{
-				Port: port,
+			docServerConfig = models.DocServerConfig{
+				Port:   port,
+				PassWD: answers[2],
 			}
 
 			data, err = json.MarshalIndent(docServerConfig, "", "    ")
@@ -101,11 +104,15 @@ var serverCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		contentStr := string(content)
+		contentStr = strings.Replace(contentStr, "${DB_PASSWD}", docServerConfig.PassWD, 1)
+		contentStr = strings.Replace(contentStr, "${HAPPYDOC_PORT}", strconv.FormatUint(docServerConfig.Port, 10), 1)
+		fmt.Println(contentStr)
 		composeFile, err := os.Create("docker-compose.yml")
 		if err != nil {
 			return err
 		}
-		_, err = composeFile.Write(content)
+		_, err = composeFile.WriteString(contentStr)
 
 		if err != nil {
 			return err
@@ -141,6 +148,10 @@ func getServerQuestions(defaultServerPort uint64) (questions models.Questions) {
 	questions.Items = append(questions.Items, models.Question{
 		Title:      "which port will this server run on",
 		DefaultVal: strconv.FormatUint(defaultServerPort, 10),
+	})
+	questions.Items = append(questions.Items, models.Question{
+		Title:      "set password for postgresql db in container(not postgresql on your host)",
+		DefaultVal: "happydoc",
 	})
 
 	return

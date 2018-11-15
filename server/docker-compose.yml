@@ -6,7 +6,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: happydoc
+      POSTGRES_PASSWORD: "${DB_PASSWD}"
     volumes:
       - ./psql_data:/var/lib/postgresql/data
 
