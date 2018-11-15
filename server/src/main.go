@@ -23,7 +23,7 @@ var app = App{}
 
 func main() {
 	psqlPassWD := os.Getenv("DB_PASSWD")
-	psql := "host=localhost port=5432 user=postgres dbname=postgres password=" + psqlPassWD + " sslmode=disable"
+	psql := "host=db port=5432 user=postgres dbname=postgres password=" + psqlPassWD + " sslmode=disable"
 	db, err := gorm.Open("postgres", psql)
 	defer db.Close()
 	if err != nil {
