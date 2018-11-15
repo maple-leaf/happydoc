@@ -22,7 +22,9 @@ type App struct {
 var app = App{}
 
 func main() {
-	db, err := gorm.Open("postgres", "host=db port=5432 user=postgres dbname=postgres password=happydoc sslmode=disable")
+	psqlPassWD := os.Getenv("DB_PASSWD")
+	psql := "host=db port=5432 user=postgres dbname=postgres password=" + psqlPassWD + "sslmode=disable"
+	db, err := gorm.Open("postgres", psql)
 	defer db.Close()
 	if err != nil {
 		panic(err)

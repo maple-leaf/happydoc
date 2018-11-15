@@ -105,7 +105,7 @@ var serverCmd = &cobra.Command{
 			return err
 		}
 		contentStr := string(content)
-		contentStr = strings.Replace(contentStr, "${DB_PASSWD}", docServerConfig.PassWD, 1)
+		contentStr = strings.Replace(contentStr, "${DB_PASSWD}", docServerConfig.PassWD, 2)
 		contentStr = strings.Replace(contentStr, "${HAPPYDOC_PORT}", strconv.FormatUint(docServerConfig.Port, 10), 1)
 		fmt.Println(contentStr)
 		composeFile, err := os.Create("docker-compose.yml")
