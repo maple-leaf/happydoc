@@ -1,0 +1,17 @@
+{{define "content"}}
+<div id="documents">
+	{{range $project := .projects}}
+	<div class="document">
+		<div class="project">
+			{{ .Project }}
+		</div>
+		<ul class="document-types">
+			{{ range .Types}}
+			{{$lastVersionIndex := lastIndexOfArray .Versions }}
+			<li><a href="/documents/{{$project.Project}}/{{.Type}}/{{index .Versions $lastVersionIndex}}">{{ .Type }}</a></li>
+			{{end}}
+		</ul>
+	</div>
+	{{end}}
+</div>
+{{end}}

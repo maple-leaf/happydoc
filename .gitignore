@@ -2,3 +2,8 @@
 
 # file for test
 package.json
+.happydoc.json
+docs
+
+server/documents
+server/main

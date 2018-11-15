@@ -76,6 +76,8 @@ func initConfig() {
 		docConfig = models.DocConfig{
 			Project: viper.GetString("project"),
 			Server:  viper.GetString("server"),
+			Account: viper.GetString("account"),
+			Token:   viper.GetString("token"),
 		}
 	}
 }

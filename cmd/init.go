@@ -88,9 +88,21 @@ func askQuestions(project string) (docConfig models.DocConfig, err error) {
 		return
 	}
 
+	account, err := askQuestion("what's your account")
+	if err != nil {
+		return
+	}
+
+	token, err := askQuestion("what's your token")
+	if err != nil {
+		return
+	}
+
 	docConfig = models.DocConfig{
 		Project: project,
 		Server:  server,
+		Account: account,
+		Token:   token,
 	}
 	return
 }

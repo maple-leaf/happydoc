@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    background: #f4f4f4;
+}
+header {
+    background-color: #fff;
+    padding: 8px;
+}
+header h1 {
+    margin: 0;
+}
+
+#documents {
+    margin: 20px auto;
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.document {
+    background: #fff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    box-shadow: 0px 0 8px 2px rgba(0,0,0,.3);
+    width: 160px;
+}
+
+.document-types {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 20px 0 0;
+}
+
+.document-types a {
+    text-decoration: none;
+    color: #5050da;
+}

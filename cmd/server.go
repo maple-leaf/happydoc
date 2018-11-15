@@ -18,6 +18,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"strconv"
 
@@ -31,6 +33,12 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "run happydoc server, will init server when first run",
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
+		fmt.Println("checking if command docker-compose exist")
+		_, err = helpers.RunShellCmd("which docker-compose", false)
+		if err != nil {
+			return
+		}
+		fmt.Println("DONE")
 		data := []byte{}
 		port := uint64(9876)
 		questions := getServerQuestions(port)
@@ -76,21 +84,51 @@ var serverCmd = &cobra.Command{
 			err = errors.New("Canceled")
 		}
 
-		if err == nil {
-			folder := answers[0]
-			if folder != "" {
-				_, _err := helpers.RunShellCmd("mkdir "+folder, false)
-				if _err != nil {
-					err = _err
-					return
-				}
-				os.Chdir(folder)
-			}
-			// TODO: get docker config; init docker; start server
+		if err != nil {
+			return
 		}
+		folder := answers[0]
+		if folder != "" {
+			_, _err := helpers.RunShellCmd("mkdir "+folder, false)
+			if _err != nil {
+				err = _err
+				return
+			}
+			os.Chdir(folder)
+		}
+		// TODO: get docker config; init docker; start server
+		content, err := fetchDockerCompose()
+		if err != nil {
+			return err
+		}
+		composeFile, err := os.Create("docker-compose.yml")
+		if err != nil {
+			return err
+		}
+		_, err = composeFile.Write(content)
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("\n===starting server===")
+		_, err = helpers.RunShellCmd("docker-compose up", false)
 
 		return
 	},
+}
+
+func fetchDockerCompose() (body []byte, err error) {
+	uri := "https://raw.githubusercontent.com/maple-leaf/happydoc/master/server/docker-compose.yml"
+	fmt.Printf("fetching docker-compose.yml from %v", uri)
+	resp, err := http.Get(uri)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	body, err = ioutil.ReadAll(resp.Body)
+
+	return
 }
 
 func getServerQuestions(defaultServerPort uint64) (questions models.Questions) {

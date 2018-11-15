@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    {{ template "head" . }}
+</head>
+
+<body>
+    {{ template "header" .}}
+    {{ template "sidebar" . }}
+    {{ template "content" . }}
+    {{template "footer" .}}
+    {{ template "scripts" . }}
+</body>
+
+</html>
+
+{{ define "head" }}
+<title>Happydoc</title>
+<link rel="stylesheet" href="/assets/style.css">
+{{ end }}
+{{ define "header" }}
+<header>
+    <h1>Happydoc</h1>
+</header>
+{{ end }}
+{{ define "scripts" }}{{ end }}
+{{ define "sidebar" }}{{ end }}
+{{ define "footer" }}{{ end }}

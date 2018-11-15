@@ -15,11 +15,18 @@
 package cmd
 
 import (
+	"bytes"
+	"compress/flate"
 	"errors"
 	"fmt"
+	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/maple-leaf/happydoc/models"
+	"github.com/mholt/archiver"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +40,15 @@ var publishCmd = &cobra.Command{
 		if len(args) == 0 {
 			return errors.New("path to document folder not provided")
 		}
-		setting.Path = args[0]
+
+		path := args[0]
+
+		indexExist := isDocFolderHasIndexFile(path)
+		if !indexExist {
+			return fmt.Errorf("index.html not exist inside folder: %v", path)
+		}
+
+		setting.Path = path
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -54,12 +69,37 @@ var publishCmd = &cobra.Command{
 		}
 		setting.DocType = cmd.Flag("type").Value.String()
 
-		_url, err := setting.ToURL()
+		// _url, err := setting.ToURL()
+		// if err != nil {
+		// 	return err
+		// }
+		params := map[string]string{
+			"version": setting.Version,
+			"project": setting.Project,
+			"type":    setting.DocType,
+			"account": docConfig.Account,
+		}
+		zipPath := setting.Project + "_v" + setting.Version + ".zip"
+		err := zipFolder(setting.Path, zipPath)
 		if err != nil {
 			return err
 		}
-		http.Get(_url)
-		fmt.Printf("%v", _url)
+
+		defer os.Remove(zipPath)
+
+		uri := setting.Server + "/document/publish"
+		req, _ := newFileUploadRequest(uri, params, "file", zipPath)
+		req.Header.Add("X-Token", docConfig.Token)
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			return err
+		}
+		if resp.StatusCode != 200 {
+			return fmt.Errorf("Failed! Server return status code: %v", resp.StatusCode)
+		}
+		resp.Body.Close()
+
 		return nil
 	},
 }
@@ -72,6 +112,73 @@ func initPublishCmd() {
 	publishCmd.Flags().BoolP("force", "f", false, "force update version of document with given type and project")
 }
 
-func validPublishArgs(args []string) {
+func isDocFolderHasIndexFile(docPath string) bool {
+	return isFileExist(docPath + "/index.html")
+}
 
+func isFileExist(filePath string) bool {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
+func zipFolder(sourcePath string, destPath string) error {
+	z := archiver.Zip{
+		CompressionLevel:       flate.DefaultCompression,
+		MkdirAll:               true,
+		SelectiveCompression:   true,
+		ContinueOnError:        false,
+		OverwriteExisting:      false,
+		ImplicitTopLevelFolder: false,
+	}
+
+	files, err := getFilesListInFolder(sourcePath)
+	if err != nil {
+		return err
+	}
+
+	err = z.Archive(files, destPath)
+
+	return err
+}
+
+func getFilesListInFolder(folderPath string) (files []string, err error) {
+	err = filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+		files = append(files, path)
+		return nil
+	})
+
+	return
+}
+
+// https://matt.aimonetti.net/posts/2013/07/01/golang-multipart-file-upload-example/
+// Creates a new file upload http request with optional extra params
+func newFileUploadRequest(uri string, params map[string]string, paramName, path string) (*http.Request, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile(paramName, filepath.Base(path))
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(part, file)
+
+	for key, val := range params {
+		_ = writer.WriteField(key, val)
+	}
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", uri, body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	return req, err
 }
