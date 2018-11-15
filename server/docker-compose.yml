@@ -6,7 +6,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: "${DB_PASSWD}"
+      POSTGRES_PASSWORD: ${DB_PASSWD}
     volumes:
       - ./psql_data:/var/lib/postgresql/data
 
@@ -16,7 +16,7 @@ services:
     volumes:
       - ./documents:/app/documents
     ports:
-      - "${HAPPYDOC_PORT}:8080"
+      - ${HAPPYDOC_PORT}:8080
     environment:
       PORT: 8080
-      DB_PASSWD: "${DB_PASSWD}"
+      DB_PASSWD: ${DB_PASSWD}
