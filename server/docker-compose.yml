@@ -17,6 +17,8 @@ services:
       - ./documents:/app/documents
     ports:
       - ${HAPPYDOC_PORT}:8080
+    links:
+      - db
     environment:
       PORT: 8080
       DB_PASSWD: ${DB_PASSWD}
