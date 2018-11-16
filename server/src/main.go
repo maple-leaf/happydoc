@@ -142,6 +142,10 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 
 
 	r.GET("/", func(c *gin.Context) {
+		if isServerFirstRun(db) {
+			c.Redirect(301, "/setup")
+			return
+		}
 		documents := []models.Document{}
 		db.Preload("Types").Find(&documents)
 		c.HTML(200, "index.html", gin.H{
@@ -150,17 +154,13 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 	})
 
 	r.GET("/setup", func(c *gin.Context) {
-		users := []models.User{}
-		db.Limit(1).Find(&users)
-		if len(users) > 0 {
+		if !isServerFirstRun(db) {
 			c.Redirect(301, "/login")
 		}
 		c.HTML(200, "setup.html", gin.H{})
 	})
 	r.POST("/setup", func(c *gin.Context) {
-		users := []models.User{}
-		db.Limit(1).Find(&users)
-		if len(users) > 0 {
+		if !isServerFirstRun(db) {
 			c.Redirect(301, "/login")
 		}
 		name := c.PostForm("name")
@@ -178,9 +178,7 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 			})
 			return
 		}
-		c.JSON(200, gin.H{
-			"message": "success",
-		})
+		c.Redirect(301, "/")
 	})
 
 	r.GET("/login", func(c *gin.Context) {
@@ -188,6 +186,12 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 	})
 
 	return r
+}
+
+func isServerFirstRun(db *gorm.DB) bool {
+	users := []models.User{}
+	db.Limit(1).Find(&users)
+	return len(users) == 0
 }
 
 func createDocument(doc models.Document, zipFilePath string, db *gorm.DB) (err error) {
