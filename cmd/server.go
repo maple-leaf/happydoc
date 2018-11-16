@@ -36,6 +36,11 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "run happydoc server, will init server when first run",
 	RunE: func(cmd *cobra.Command, args []string) (err error) {
+		// TOOD: check docker-compose.yml exist
+		if helpers.IsFileExist("./docker-compose.yml") {
+			err = startServer()
+			return
+		}
 		fmt.Println("checking if command docker-compose exist")
 		_, err = helpers.RunShellCmd("which docker-compose", false)
 		if err != nil {
@@ -126,11 +131,22 @@ var serverCmd = &cobra.Command{
 			return err
 		}
 
-		fmt.Println("\n===starting server===")
-		_, err = helpers.RunShellCmd("docker-compose up", false)
+		err = startServer()
 
 		return
 	},
+}
+
+func startServer() (err error) {
+	fmt.Println("\n===starting server===")
+	_, err = helpers.RunShellCmd("docker-compose up", false)
+
+	if err == promptui.ErrInterrupt {
+		fmt.Println("===shuting down server===")
+		_, err = helpers.RunShellCmd("docker-compose down", false)
+	}
+
+	return
 }
 
 func fetchDockerCompose() (body []byte, err error) {

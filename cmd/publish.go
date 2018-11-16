@@ -25,6 +25,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/maple-leaf/happydoc/helpers"
+
 	"github.com/maple-leaf/happydoc/models"
 	"github.com/mholt/archiver"
 	"github.com/spf13/cobra"
@@ -113,15 +115,7 @@ func initPublishCmd() {
 }
 
 func isDocFolderHasIndexFile(docPath string) bool {
-	return isFileExist(docPath + "/index.html")
-}
-
-func isFileExist(filePath string) bool {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return false
-	}
-
-	return true
+	return helpers.IsFileExist(docPath + "/index.html")
 }
 
 func zipFolder(sourcePath string, destPath string) error {
