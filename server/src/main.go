@@ -109,6 +109,7 @@ func setupRoutes(db *gorm.DB) *gin.Engine {
 		adminGroup.POST("/new-account", func(c *gin.Context) {
 			t := models.User{}
 			c.ShouldBind(&t)
+			t.DeletedAt = nil
 			token, publicKey, err := services.GenerateJWTRS(services.AuthClaims{
 				Username: t.Name,
 			})
