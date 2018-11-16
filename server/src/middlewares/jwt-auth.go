@@ -7,7 +7,7 @@ import (
 	"github.com/maple-leaf/happydoc-server/services"
 )
 
-func JWT(db *gorm.DB) gin.HandlerFunc {
+func JWTAuth(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := c.GetHeader("x-Token")
 		username := c.PostForm("account")

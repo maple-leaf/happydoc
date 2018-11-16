@@ -1,0 +1,15 @@
+{{define "content"}}
+<h2>Setup</h2>
+
+<form action="/setup" method="post">
+    <label for="name">
+        Name:
+        <input placeholder="enter acount name" type="text" name="name"/>
+    </label>
+    <label for="passwd">
+        Password:
+        <input placeholder="enter password" type="password" name="passwd"/>
+    </label>
+    <button type="submit">Create admin account</button>
+</form>
+{{end}}

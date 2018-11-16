@@ -24,6 +24,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/manifoldco/promptui"
 	"github.com/maple-leaf/happydoc/helpers"
 	"github.com/maple-leaf/happydoc/models"
@@ -99,7 +101,12 @@ var serverCmd = &cobra.Command{
 			}
 			os.Chdir(folder)
 		}
-		// TODO: get docker config; init docker; start server
+
+		sessionKey, err := generateSessionKey()
+		if err != nil {
+			return
+		}
+
 		content, err := fetchDockerCompose()
 		if err != nil {
 			return err
@@ -107,6 +114,7 @@ var serverCmd = &cobra.Command{
 		contentStr := string(content)
 		contentStr = strings.Replace(contentStr, "${DB_PASSWD}", docServerConfig.PassWD, 2)
 		contentStr = strings.Replace(contentStr, "${HAPPYDOC_PORT}", strconv.FormatUint(docServerConfig.Port, 10), 1)
+		contentStr = strings.Replace(contentStr, "${SESSION_KEY}", strconv.FormatUint(sessionKey, 10), 1)
 		fmt.Println(contentStr)
 		composeFile, err := os.Create("docker-compose.yml")
 		if err != nil {
@@ -153,6 +161,16 @@ func getServerQuestions(defaultServerPort uint64) (questions models.Questions) {
 		Title:      "set password for postgresql db in container(not postgresql on your host)",
 		DefaultVal: "happydoc",
 	})
+
+	return
+}
+
+func generateSessionKey() (key string, err error) {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return
+	}
+	key = id.String()
 
 	return
 }
