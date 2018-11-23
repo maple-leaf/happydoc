@@ -1,17 +1,18 @@
 {{define "content"}}
-<h2>Accounts</h2>
-<div id="accounts" class="blocks">
-	{{range $account := .accounts}}
-	<div class="block account">
-		<div class="name">
-			{{ .Name }}<span class="btn">X</span>
+<div id="accounts">
+    <h2>Accounts</h2>
+    <div class="blocks">
+        {{range $account := .accounts}}
+        <div class="block account">
+            <div class="name">
+                {{ .Name }}
+            </div>
+            <!--<span class="btn">X</span>-->
         </div>
-	</div>
-	{{end}}
-	<div class="block account">
-		<a href="/admin/new-account" class="name">
-			Add New Account
-        </a>
-	</div>
+        {{end}}
+        <div class="block account-add">
+            <a href="/admin/new-account" class="name"></a>
+        </div>
+    </div>
 </div>
 {{end}}

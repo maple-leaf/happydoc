@@ -1,10 +1,28 @@
 {{define "content"}}
-<h2>Account Info</h2>
-<div class="block">
-    <div class="name">Name: {{ .name }}</div>
-    <div class="token">
-        Token:<br>
-        {{ .token }}
-    </div>
+<div id="page-account">
+    <div class="form">
+        <div class="tab-content">
+            <div id="login">   
+                <h1>Account Info</h1>
+
+                <form disabled>
+                    <div class="field-wrap">
+                        <label>
+                            Name
+                        </label>
+                        <div>{{ .name }}</div>
+                    </div>
+                    <div class="field-wrap">
+                        <label>
+                            Token <a href="javascript:;">(copy this, you will never see this again)</a>
+                        </label>
+                        <textarea>{{ .token }}</textarea>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- tab-content -->
+
+    </div> <!-- /form -->
 </div>
 {{end}}

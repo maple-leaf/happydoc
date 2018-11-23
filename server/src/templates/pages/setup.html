@@ -1,15 +1,31 @@
 {{define "content"}}
-<h2>Setup</h2>
+<div class="form">
+    <div class="tab-content">
+        <div id="login">   
+            <h1>Setup</h1>
 
-<form action="/setup" method="post">
-    <label for="name">
-        Name:
-        <input placeholder="enter acount name" type="text" name="name"/>
-    </label>
-    <label for="passwd">
-        Password:
-        <input placeholder="enter password" type="password" name="passwd"/>
-    </label>
-    <button type="submit">Create admin account</button>
-</form>
+            <form action="/setup" method="post">
+
+                <div class="field-wrap">
+                    <label>
+                        Name<span class="req">*</span>
+                    </label>
+                    <input type="text" required autocomplete="off" name="name"/>
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Password<span class="req">*</span>
+                    </label>
+                    <input type="password" required autocomplete="off" name="passwd"/>
+                </div>
+
+                <button class="button button-block" type="submit"/>Create admin account</button>
+
+            </form>
+        </div>
+
+    </div><!-- tab-content -->
+
+</div> <!-- /form -->
 {{end}}

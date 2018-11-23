@@ -1,7 +1,26 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
 body {
     margin: 0;
-    background: #f4f4f4;
+    background: #303c46;
+    font-family: 'Titillium Web', sans-serif;
 }
+
+a {
+    text-decoration: none;
+    color: #1ab188;
+    transition: .5s ease;
+}
+a:hover {
+    color: #179b77;
+}
+
 header {
     background-color: #fff;
     padding: 8px;
@@ -14,7 +33,6 @@ header h1 {
     margin: 20px auto;
     width: 1200px;
     display: flex;
-    justify-content: space-between;
 }
 
 .block {
@@ -25,18 +43,32 @@ header h1 {
     width: 160px;
 }
 
-.btn {
-    border: 1px solid #000;
-    padding: 2px 8px;
-    cursor: pointer;
+/* documents list */
+
+.document {
+    border-top: 6px solid goldenrod;
+    width: 260px;
+    margin-right: 20px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.document .project {
+    font-size: 20px;
+    color: #37444f;
 }
 
 .document-types {
-    display: flex;
-    justify-content: space-between;
     list-style-type: none;
     padding-left: 0;
     margin: 20px 0 0;
+}
+
+.document-types li {
+    display: block;
+    line-height: 38px;
 }
 
 .document-types a {
@@ -44,8 +76,208 @@ header h1 {
     color: #5050da;
 }
 
-#accounts .name {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* accounts list */
+
+#accounts {
+    padding: 0 40px;
 }
+
+#accounts h2 {
+    text-align: center;
+    color: #ffffff;
+    margin: 40px 0;
+}
+
+#accounts .account {
+    height: 80px;
+    margin-right: 20px;
+}
+
+#accounts .name {
+    text-align: center;
+    font-size: 24px;
+}
+
+#accounts .account-add {
+    width: 80px;
+    border-radius: 50%;
+}
+#accounts .account-add a {
+    position: relative;
+}
+#accounts .account-add a:before {
+    content: "";
+    height: 60px;
+    width: 10px;
+    background: #37434f;
+    position: absolute;
+    left: 25px;
+    top: 6px;
+    border-radius: 6px;
+}
+
+#accounts .account-add a:after {
+    content: "";
+    height: 10px;
+    width: 60px;
+    background: #37434f;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    border-radius: 6px;
+}
+#accounts .account-add a:hover:before,
+#accounts .account-add a:hover:after {
+    background: #1ab188;
+}
+
+#page-account {
+    color: #fff;
+}
+#page-account textarea {
+    height: 300px;
+}
+
+/* Form */
+.form {
+    background: rgba(19, 35, 47, 0.9);
+    padding: 40px;
+    max-width: 600px;
+    margin: 40px auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+}
+
+.tab-group {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+    display: flex;
+}
+.tab-group li {
+    flex: 1;
+}
+.tab-group li a {
+    display: block;
+    text-decoration: none;
+    padding: 15px;
+    background: rgba(160, 179, 176, 0.25);
+    color: #a0b3b0;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: .5s ease;
+}
+.tab-group li a:hover {
+    background: #179b77;
+    color: #ffffff;
+}
+.tab-group .active a {
+    background: #1ab188;
+    color: #ffffff;
+}
+
+.form h1 {
+    text-align: center;
+    color: #ffffff;
+    font-weight: 300;
+    margin: 0 0 40px;
+}
+
+label {
+    -webkit-transform: translateY(6px);
+    transform: translateY(6px);
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.25s ease;
+    -webkit-backface-visibility: hidden;
+    pointer-events: none;
+    font-size: 22px;
+}
+label .req {
+    margin: 2px;
+    color: #1ab188;
+}
+
+label.active {
+    -webkit-transform: translateY(50px);
+    transform: translateY(50px);
+    left: 2px;
+    font-size: 14px;
+}
+label.active .req {
+    opacity: 0;
+}
+
+label.highlight {
+    color: #ffffff;
+}
+
+input, textarea {
+    font-size: 22px;
+    display: block;
+    width: 100%;
+    height: 42px;
+    padding: 5px 10px;
+    background: none;
+    background-image: none;
+    border: 1px solid #a0b3b0;
+    color: #ffffff;
+    border-radius: 0;
+    transition: border-color .25s ease, box-shadow .25s ease;
+}
+input:focus, textarea:focus {
+    outline: 0;
+    border-color: #1ab188;
+}
+
+textarea {
+    border: 2px solid #a0b3b0;
+    resize: vertical;
+}
+
+.field-wrap {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.top-row {
+    display: flex;
+}
+
+.top-row > div {
+    flex: 1;
+    width: 48%;
+    margin-right: 4%;
+}
+.top-row > div:last-child {
+    margin: 0;
+}
+
+.button {
+    border: 0;
+    outline: none;
+    border-radius: 0;
+    padding: 15px 0;
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: #1ab188;
+    color: #ffffff;
+    transition: all 0.5s ease;
+    -webkit-appearance: none;
+}
+.button:hover, .button:focus {
+    background: #179b77;
+}
+
+.button-block {
+    display: block;
+    width: 100%;
+}
+
+.forgot {
+    margin-top: -20px;
+    text-align: right;
+}
+
