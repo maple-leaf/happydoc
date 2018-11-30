@@ -1,4 +1,5 @@
 .vscode
+dist
 
 # file for test
 package.json
