@@ -7,7 +7,9 @@ convenient system that easy to create to make people easy to publish their docum
 ```json
 {
     "project": "myAwesomeProject",
-    "server": "http://127.0.0.1:8000"
+    "server": "http://127.0.0.1:8000",
+    "account": "your account name at server",
+    "token":
 }
 ```
 
@@ -44,3 +46,8 @@ This command will ask you:
 - [postgres](https://www.postgresql.org/)
 - [cobra](https://github.com/spf13/cobra)
 - [gin](https://github.com/gin-gonic/gin)
+
+## TODO
+- better UI
+- use https
+- fix output for subcommand `server`
