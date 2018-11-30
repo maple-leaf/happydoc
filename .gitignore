@@ -3,7 +3,6 @@ dist
 token
 
 # file for test
-package.json
 .happydoc.json
 docs
 
